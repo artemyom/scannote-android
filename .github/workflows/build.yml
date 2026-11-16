@@ -1,32 +1,26 @@
+
 name: Build ScanNote APK
 
-on:
-  workflow_dispatch:
+on: workflow_dispatch
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Install Flutter
-        uses: subosito/flutter-action@v2
+      - uses: subosito/flutter-action@v2
         with:
           channel: stable
 
-      - name: Preserve ScanNote source
+      - name: Create Android project
         run: |
-          test -f Lib/Main.dart
           mkdir -p /tmp/scannote
           cp Lib/Main.dart /tmp/scannote/main.dart
-      - name: Create Android platform
-        run: |
           flutter create --platforms=android --project-name scannote .
           cp /tmp/scannote/main.dart lib/main.dart
 
-   - name: Install dependencies
+      - name: Install dependencies
         run: flutter pub get
 
       - name: Build APK
