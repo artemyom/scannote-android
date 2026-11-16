@@ -7,6 +7,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -16,9 +17,16 @@ jobs:
         with:
           channel: stable
 
+      - name: Preserve ScanNote source
+        run: |
+          test -f lib/main.dart
+          mkdir -p /tmp/scannote
+          cp lib/main.dart /tmp/scannote/main.dart
+
       - name: Create Android platform
         run: |
           flutter create --platforms=android --project-name scannote .
+          cp /tmp/scannote/main.dart lib/main.dart
 
       - name: Install dependencies
         run: flutter pub get
@@ -31,3 +39,4 @@ jobs:
         with:
           name: ScanNote-Android
           path: build/app/outputs/flutter-apk/app-release.apk
+
